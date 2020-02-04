@@ -420,6 +420,13 @@ image(ex.pr, 1:Age.mature, f.i.a, zlim = zlim.p, xlab = "", ylab = "", main = ""
   names(ob.N.df) <- c("Age", "ob.N")
   distance.N <- function(c) {
   	  dist.N <- c()
+	  min.a <- min(s1.db$Age)
+	  max.a <- max(s1.db$Age)
+	  subset.min.a <- subset(s1.db, Age == min.a)
+	  n.a.v <- matrix(NA, nrow = length(x.pred), ncol = max.a-min.a+1)
+	  n.a.v[, 1] <- hist(subset.min.a$ln.h2, breaks = e.pred, plot = FALSE)$counts
+	  for (a in (min.a+1):max.a) {
+		  n.a.v[a] <- K[a]*n.a.v[a-1]
 	  for (p in 1:nplot) {
 		if (p != 5) {
 		    dist.N.p <- 0
@@ -536,7 +543,7 @@ image(ex.pr, 1:Age.mature, f.i.a, zlim = zlim.p, xlab = "", ylab = "", main = ""
  	 geom_line(data = ob.lam.df, aes(x = Age, y = ob.lambda), col = "black", size = 2, alpha = 1/3, show.legend = FALSE) +
 	 labs(x = expression(paste("Abandonment time ", italic(t), " (years)")), y = expression(lambda))+
  	 scale_alpha(guide = "none") +
-	 scale_y_continuous(limits = c(0, 5.8))
+	 scale_y_continuous(limits = c(0, 3))
  	 p.lam.ob
  	 #ggsave("no-migration.png", p.lam.ob, device = "png", width = 18, height = 12, units = "in", dpi = 180*2)
  }
@@ -579,7 +586,7 @@ image(ex.pr, 1:Age.mature, f.i.a, zlim = zlim.p, xlab = "", ylab = "", main = ""
 				geom_point(data = obs.lam.p, aes(x = Age, y = lambda), alpha = 1/2, size = 1) +
 				geom_line(data = ob.lam.df, aes(x = Age, y = ob.lambda), col = "black", size = 2, alpha = 1/3, show.legend = FALSE) +
 	 			scale_alpha(guide = "none") +
-				scale_y_continuous(limits = c(0, 5.8))
+				scale_y_continuous(limits = c(0, 3))
 	plot.l.graf.c
 	#ggsave("with-migration.png", p.lam.ob, device = "png", width = 18, height = 12, units = "in", dpi = 180*2)
 }
